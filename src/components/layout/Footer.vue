@@ -124,11 +124,13 @@
         </svg>
       </a>
     </div>
-    <div class="footer-copyright d-flex align-items-center justify-content-between gen-padding">
+    <div
+      class="footer-copyright d-flex align-items-center justify-content-between gen-padding"
+    >
       <span>&copy; 2019 Codedrills Education Private Limited</span>
       <div>
-        <router-link to="/premium">Privacy Policy</router-link>|
-        <router-link to="/premium">Terms & Conditions</router-link>
+        <router-link to="/privacy">Privacy Policy</router-link> |
+        <router-link to="/terms">Terms & Conditions</router-link>
       </div>
     </div>
   </footer>
