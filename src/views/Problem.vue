@@ -3,8 +3,7 @@
     <Navbar />
     <section class="problem-section-header gen-padding">
       <div class="d-flex problem-section-title align-items-center">
-        <h1>{{ title }}</h1>
-        <img src="../assets/images/Crown.svg" />
+        <h1>{{ title }} <img src="../assets/images/Crown.svg" /></h1>
       </div>
       <div class="problem-section-tags">
         <span class="problem-section-tag" v-for="tag in tags" :key="tag">{{
@@ -218,11 +217,12 @@ export default {
 
 .problem-section-title h1 {
   font-size: 50px;
-  margin: 0 20px 0 0;
+  margin: 0;
 }
 
 .problem-section-title img {
   height: 30px;
+  margin-left: 10px;
 }
 
 .problem-section-tags {
@@ -240,7 +240,7 @@ export default {
 }
 
 .problem-section-title-info > div {
-  margin-right: 3vw;
+  margin-right: 50px;
 }
 
 .problem-section-title-info div h5,
@@ -352,5 +352,78 @@ export default {
   font-style: inherit;
   font-weight: 300;
   font-size: 14px;
+}
+
+@media screen and (max-width: 1000px) {
+  .problem-section-custom-inputs div input,
+  .problem-section-custom-inputs div h6,
+  .problem-section-editor-options {
+    font-size: 12px;
+  }
+  .problem-section-custom-inputs div {
+    margin-right: 0.5vw;
+    width: 170px;
+  }
+  .problem-section-custom-inputs,
+  .problem-section-title-info {
+    flex-wrap: wrap;
+  }
+
+  .problem-section-tags {
+    margin-bottom: 0;
+  }
+
+  .problem-section-title-info > div,
+  .problem-section-custom-inputs div {
+    margin-top: 20px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .problem-section-title-info > div {
+    margin-right: 25px;
+  }
+  .problem-section-title h1 {
+    font-size: 30px;
+  }
+
+  .problem-section-title img {
+    height: 20px;
+    margin-left: 5px;
+  }
+
+  .problem-section-tag {
+    font-size: 10px;
+    margin-right: 4px;
+  }
+  .problem-section-title-info div h5,
+  .problem-section-title-info div p,
+  .problem-section-description p,
+  .problem-section-description h5,
+  .problem-section-tabs a {
+    font-size: 12px;
+  }
+
+  .problem-section-info,
+  .problem-section-header {
+    padding-top: 30px;
+    padding-bottom: 20px;
+  }
+
+  .problem-section-tabs {
+    height: 30px;
+  }
+  .problem-section-description-info {
+    max-width: 100%;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .problem-section-custom-inputs {
+    justify-content: center;
+  }
+  .problem-section-title h1 {
+    font-size: 22px;
+  }
 }
 </style>

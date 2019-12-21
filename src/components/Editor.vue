@@ -182,4 +182,23 @@ export default {
 .site-editor .switch {
   margin-right: 5px;
 }
+
+@media screen and (max-width: 1000px) {
+  .site-select {
+    height: 37px;
+    min-width: 80px;
+    padding: 5px;
+  }
+
+  .site-editor-header,
+  .site-select {
+    font-size: 11px;
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .site-editor-options select {
+    display: none;
+  }
+}
 </style>

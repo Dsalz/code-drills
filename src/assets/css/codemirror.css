@@ -522,3 +522,9 @@ span.CodeMirror-selectedtext {
 li.CodeMirror-hint-active {
   background: rgba(114, 223, 212, 0.5);
 }
+
+@media screen and (max-width: 400px) {
+  .CodeMirror {
+    font-size: 14px;
+  }
+}

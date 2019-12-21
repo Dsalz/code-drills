@@ -154,3 +154,21 @@ input:checked + .slider:before {
   background-position: right 54% top 50%, 0 0;
   background-size: 11px auto, 100%;
 }
+
+.show-s,
+.nav-resp-menu a.show-s {
+  display: none;
+}
+
+@media screen and (max-width: 800px) {
+  .show-s,
+  .nav-resp-menu a.show-s {
+    display: block;
+  }
+  .hide-s {
+    display: none;
+  }
+  .gen-padding {
+    padding: 0 4%;
+  }
+}

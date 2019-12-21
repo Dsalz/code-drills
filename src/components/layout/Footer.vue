@@ -189,4 +189,28 @@ footer {
   font-weight: bold;
   color: #1c2330;
 }
+
+@media screen and (max-width: 800px) {
+  .footer-links a {
+    font-size: 12px;
+    margin: 0 10px;
+  }
+  .footer-copyright {
+    font-size: 8px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .footer-links a {
+    margin: 0 5px;
+  }
+  .footer-copyright {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .footer-copyright div {
+    width: 100%;
+    text-align: center;
+  }
+}
 </style>
