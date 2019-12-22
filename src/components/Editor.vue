@@ -7,14 +7,21 @@
         <option value="text/javascript">Javascript</option>
       </select>
       <div class="site-editor-options d-flex align-items-center">
-        <select class="site-select">
-          <option value="Solarized">Solarized</option>
+        <select class="site-select" v-model="cmOptions.theme">
+          <option value="idea">Idea</option>
+          <option value="dracula">Dracular</option>
+          <option value="base16-dark">Solarized Dark</option>
+          <option value="default">Solarized Light</option>
         </select>
-        <select class="site-select">
+        <select class="site-select" v-model="cmOptions.keyMap">
           <option value="emacs">Emacs</option>
+          <option value="vim">Vim</option>
+          <option value="sublime">None</option>
         </select>
-        <select class="site-select">
+        <select class="site-select" v-model="fontSize">
+          <option value="small">Small</option>
           <option value="normal">Normal</option>
+          <option value="large">Large</option>
         </select>
         <select class="site-select" v-model="cmOptions.tabSize">
           <option value="2">2 Spaces</option>
@@ -71,6 +78,7 @@
       @ready="onCmReady"
       @focus="onCmFocus"
       @input="onCodeChange"
+      :class="fontSize"
     >
     </CodeMirror>
   </div>
@@ -82,6 +90,12 @@ import "@/assets/css/codemirror.css";
 import "codemirror/mode/javascript/javascript.js";
 import "codemirror/mode/clike/clike.js";
 import "codemirror/theme/base16-dark.css";
+import "codemirror/theme/dracula.css";
+import "codemirror/theme/solarized.css";
+import "codemirror/theme/idea.css";
+import "codemirror/keymap/emacs.js";
+import "codemirror/keymap/vim.js";
+import "codemirror/keymap/sublime.js";
 import "codemirror/lib/codemirror";
 import "codemirror/addon/hint/show-hint";
 import "codemirror/addon/hint/anyword-hint";
@@ -90,6 +104,7 @@ export default {
   data() {
     return {
       showHint: true,
+      fontSize: "normal",
       cmOptions: {
         tabSize: 4,
         mode: "text/javascript",
@@ -103,7 +118,8 @@ export default {
           Ctrl: "autocomplete"
         },
         foldGutter: true,
-        placeholder: "Please end with ';'"
+        placeholder: "Please end with ';'",
+        keyMap: "sublime"
       }
     };
   },

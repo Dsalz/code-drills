@@ -3,10 +3,21 @@
 .CodeMirror {
   /* Set height, width, borders, and global font properties here */
   font-family: monospace;
-  font-size: 20px;
   height: 700px;
   color: black;
   direction: ltr;
+}
+
+.vue-codemirror.small .CodeMirror {
+  font-size: 16px;
+}
+
+.vue-codemirror.normal .CodeMirror {
+  font-size: 20px;
+}
+
+.vue-codemirror.large .CodeMirror {
+  font-size: 24px;
 }
 
 /* PADDING */
@@ -521,10 +532,4 @@ span.CodeMirror-selectedtext {
 
 li.CodeMirror-hint-active {
   background: rgba(114, 223, 212, 0.5);
-}
-
-@media screen and (max-width: 400px) {
-  .CodeMirror {
-    font-size: 14px;
-  }
 }
