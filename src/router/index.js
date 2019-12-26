@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 
 import problemRoutes from "./problem";
+import profileRoutes from "./profile";
 import NotFound from "../views/NotFound.vue";
 
 Vue.use(Router);
@@ -15,7 +16,7 @@ const router = new Router({
       component: {
         template: "<router-view></router-view>"
       },
-      children: [...problemRoutes]
+      children: [...problemRoutes, ...profileRoutes]
     },
     {
       path: "*",

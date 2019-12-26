@@ -1,7 +1,7 @@
 <template>
   <div>
     <Navbar />
-    <section class="problem-section-header gen-padding">
+    <section class="problem-section-header gen-padding grey-bg">
       <div class="d-flex problem-section-title align-items-center">
         <h1>{{ title }} <img src="../assets/images/Crown.svg" /></h1>
       </div>
@@ -49,7 +49,7 @@
         </div>
       </div>
     </section>
-    <section class="problem-section-info gen-padding">
+    <section class="problem-section-info gen-padding white-bg">
       <div class="problem-section-tabs d-flex- align-items-center">
         <a class="active">Description</a>
         <a>Submission</a>
@@ -206,7 +206,6 @@ export default {
 <style scoped>
 .problem-section-header {
   color: #1c2330;
-  background: #fbfbfb;
 }
 
 .problem-section-info,
@@ -264,10 +263,6 @@ export default {
 
 .problem-section-title-info img {
   margin-right: 4px;
-}
-
-.problem-section-info {
-  background: #fff;
 }
 
 .problem-section-info .constraint-img {

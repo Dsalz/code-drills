@@ -162,6 +162,18 @@ input:checked + .slider:before {
   display: none;
 }
 
+.grey-bg {
+  background: #fbfbfb;
+}
+
+.white-bg {
+  background: #fff;
+}
+
+.br-50 {
+  border-radius: 50%;
+}
+
 @media screen and (max-width: 800px) {
   .show-s,
   .nav-resp-menu a.show-s {
