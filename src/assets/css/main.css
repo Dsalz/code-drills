@@ -194,6 +194,10 @@ input:checked + .slider:before {
   fill: #fff;
 }
 
+.marg-0 {
+  margin: 0;
+}
+
 @media screen and (max-width: 800px) {
   .show-s,
   .nav-resp-menu a.show-s {

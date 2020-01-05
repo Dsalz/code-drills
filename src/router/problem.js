@@ -2,7 +2,7 @@ import ProblemPage from "../views/Problem.vue";
 
 const problemRoutes = [
   {
-    path: "problem/:id",
+    path: "problem/:name",
     name: "Problem",
     component: ProblemPage
   }

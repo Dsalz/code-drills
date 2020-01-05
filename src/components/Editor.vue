@@ -6,7 +6,10 @@
         <option value="text/clike">Java</option>
         <option value="text/javascript">Javascript</option>
       </select>
-      <div class="site-editor-options d-flex align-items-center">
+      <div
+        class="site-editor-options d-flex align-items-center"
+        v-if="!editorialMode"
+      >
         <select class="site-select" v-model="cmOptions.theme">
           <option value="idea">Idea</option>
           <option value="dracula">Dracular</option>
@@ -131,6 +134,10 @@ export default {
     onCodeChange: {
       type: Function,
       required: true
+    },
+    editorialMode: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
