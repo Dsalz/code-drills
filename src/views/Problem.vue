@@ -345,7 +345,7 @@ export default {
       code: "const a = 10",
       activeTab: "description",
       judgingMode: false,
-      solved: true
+      solved: false
     };
   },
   components: {
