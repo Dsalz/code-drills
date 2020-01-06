@@ -18,7 +18,7 @@ const state = {
 
 const actions = {
   async ensureToken({ commit, state, getters, dispatch }) {
-    return "fjfjjfjf";
+    return new Promise(resolve => resolve("fjfjjfjf"));
     // var tokenPromise;
     // if (getters.userToken) {
     //   tokenPromise = new Promise(resolve => {

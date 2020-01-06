@@ -9,7 +9,7 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "codedrills_proto": "^0.1.3",
+    "codedrills_proto": "^0.1.5",
     "codemirror": "^5.50.0",
     "core-js": "^3.4.3",
     "express": "^4.17.1",
