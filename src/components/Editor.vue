@@ -3,7 +3,7 @@
     <div class="site-editor-header d-flex justify-content-between">
       <select class="site-editor-lang site-select" v-model="cmOptions.mode">
         <option value="text/clike">C++</option>
-        <option value="text/clike">Java</option>
+        <option value="text/python">Python</option>
         <option value="text/javascript">Javascript</option>
       </select>
       <div
@@ -91,6 +91,7 @@
 import { codemirror as CodeMirror } from "vue-codemirror";
 import "@/assets/css/codemirror.css";
 import "codemirror/mode/javascript/javascript.js";
+import "codemirror/mode/python/python.js";
 import "codemirror/mode/clike/clike.js";
 import "codemirror/theme/base16-dark.css";
 import "codemirror/theme/dracula.css";

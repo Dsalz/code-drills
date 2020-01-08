@@ -13,7 +13,37 @@ const state = {
   userContents: null /* All user contents */,
   current: null /* Content being currently edited */,
   errorCreateContent: null,
-  errorUpdateContent: null
+  errorUpdateContent: null,
+  title: "Counting Valleys",
+  tags: ["dp", "graphs", "category"],
+  companies: ["Google", "Facebook", "Microsoft"],
+  difficulty: "Easy",
+  accuracy: "87%",
+  frequency: "Often",
+  rating: 3,
+  code: "const a = 10",
+  customInputs: [
+    {
+      name: "murderRoom",
+      type: "string",
+      inputType: "text"
+    },
+    {
+      name: "murderTime",
+      type: "integer",
+      inputType: "text"
+    },
+    {
+      name: "eventTime",
+      type: "tupple Integer",
+      inputType: "text"
+    },
+    {
+      name: "murderTime",
+      type: "integer",
+      inputType: "text"
+    }
+  ]
 };
 
 const actions = {
