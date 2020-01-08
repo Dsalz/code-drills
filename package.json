@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "heroku-postbuild": "npm i codedrills_proto@latest --registry http://verdaccio.dev.codedrills.io",
+    "heroku-postbuild": "npm i codedrills_proto@latest --registry http://verdaccio.dev.codedrills.io && npm run build",
     "lint": "vue-cli-service lint",
     "start": "node server.js"
   },
