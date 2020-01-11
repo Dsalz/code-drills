@@ -13,6 +13,7 @@ const siteService = new site.ContentViewServicePromiseClient(
 
 const state = {
   loading: false,
+  premiumOnly: false,
   title: "",
   tags: ["dp", "graphs", "category"],
   companies: ["Google", "Facebook", "Microsoft"],
@@ -44,7 +45,87 @@ const state = {
     }
   ],
   judgingMode: false,
-  solved: false
+  solved: false,
+  runtimeError: false,
+  timeTaken: "2 MS",
+  memoryConsumed: "38.1 MB",
+  problemDescription: `
+          <p>
+            Gary is an avid hiker. He tracks his hikes meticulously, paying
+            close attention to small details like topography. During his last
+            hike he took exactly steps. For every step he took, he noted if it
+            was an uphill, , or a downhill, step. Gary's hikes start and end at
+            sea level and each step up or down represents a unit change in
+            altitude. We define the following terms:
+          </p>
+          <br />
+          <p>
+            · A mountain is a sequence of consecutive steps above sea level,
+            starting with a step up from sea level and ending with a step down
+            to sea level.
+          </p>
+          <p>
+            · A valley is a sequence of consecutive steps below sea level,
+            starting with a step down from sea level and ending with a step up
+            to sea level.
+          </p>
+          <br />
+
+          <p>
+            Given Gary's sequence of up and down steps during his last hike,
+            find and print the number of valleys he walked through. For example,
+            if Gary's path is , he first enters a valley units deep. Then he
+            climbs out an up onto a mountain units high. Finally, he returns to
+            sea level and ends his hike.
+          </p>
+          <br />
+
+          <h5>Function Description</h5>
+          <p>
+            Complete the countingValleys function in the editor below. It must
+            return an integer that denotes the number of valleys Gary traversed.
+          </p>
+          <br />
+
+          <p>countingValleys has the following parameter(s):</p>
+          <p>· n: the number of steps Gary takes</p>
+          <p>· s: a string describing his path</p>
+
+          <br />
+
+          <h5>Input Format</h5>
+          <p>
+            The first line contains an integer , the number of steps in Gary's
+            hike.
+          </p>
+          <p>
+            The second line contains a single string , of characters that
+            describe his path.
+          </p>
+          <br />
+
+          <h5>Constraints</h5>
+          <img class="constraint-img" src="../assets/images/constraint-img.png" />
+
+          <br />
+
+          <h5>Output Format</h5>
+          <p>
+            Print a single integer that denotes the number of valleys Gary
+            walked through during his hike.
+          </p>
+          <br />
+          <h5>Sample Input</h5>
+          <p>1</p>
+          <br />
+
+          <h5>Explanation</h5>
+          <p>
+            If we represent _ as sea level, a step up as /, and a step down as
+            , Gary's hike can be drawn as:
+          </p>
+          <p>He enters and leaves one valley.</p>
+  `
 };
 
 const actions = {
@@ -123,7 +204,7 @@ const mutations = {
       else companies.push(parts[1]);
     }
     state.tags = tags;
-    state.companies = companies;
+    state.companies = companies.filter(Boolean);
     state.customInputs = problemMeta.argsList.map(a => ({
       name: a.name,
       type: "int[]",

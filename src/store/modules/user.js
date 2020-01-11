@@ -4,7 +4,8 @@ import firebase from "firebase";
 const state = {
   user: null,
   loginError: null,
-  userToken: null
+  userToken: null,
+  hasPremiumAccess: false
 };
 
 const getters = {
