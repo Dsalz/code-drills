@@ -1,7 +1,9 @@
 <template>
   <div>
     <Navbar />
-    <section class="problem-section-header gen-padding grey-bg">
+    <Loader v-if="loading" />
+    <NotFoundText v-if="!loading && !title" item="problem" />
+    <section v-if="!loading && title" class="problem-section-header gen-padding grey-bg">
       <div class="d-flex problem-section-title align-items-center">
         <h1>
           {{ title }}
@@ -9,9 +11,7 @@
         </h1>
       </div>
       <div class="problem-section-tags">
-        <span class="problem-section-tag" v-for="tag in tags" :key="tag">
-          {{ tag }}
-        </span>
+        <span class="problem-section-tag" v-for="tag in tags" :key="tag">{{ tag }}</span>
       </div>
       <div class="problem-section-title-info d-flex">
         <div>
@@ -47,28 +47,24 @@
             class="problem-section-tag"
             v-for="company in companies"
             :key="company"
-            >{{ company }}</span
-          >
+          >{{ company }}</span>
         </div>
       </div>
     </section>
-    <section class="problem-section-info gen-padding white-bg">
+    <section v-if="!loading && title" class="problem-section-info gen-padding white-bg">
       <div class="problem-section-tabs d-flex- align-items-center">
         <a
           :class="{ active: activeTab === 'description' }"
           @click="() => changeTab('description')"
-          >Description</a
-        >
+        >Description</a>
         <a
           :class="{ active: activeTab === 'submission' }"
           @click="() => changeTab('submission')"
-          >Submission</a
-        >
+        >Submission</a>
         <a
           :class="{ active: activeTab === 'editorial' }"
           @click="() => changeTab('editorial')"
-          >Editorial</a
-        >
+        >Editorial</a>
       </div>
 
       <div class="problem-section-description">
@@ -128,10 +124,7 @@
           <br />
 
           <h5>Constraints</h5>
-          <img
-            class="constraint-img"
-            src="../assets/images/constraint-img.png"
-          />
+          <img class="constraint-img" src="../assets/images/constraint-img.png" />
 
           <br />
 
@@ -157,10 +150,7 @@
           :code="code"
           :onCodeChange="onCmCodeChange"
         />
-        <div
-          class="problem-section-editor-options"
-          v-if="activeTab === 'description'"
-        >
+        <div class="problem-section-editor-options" v-if="activeTab === 'description'">
           <label class="d-flex align-items-center">
             <input class="site-checkbox" type="checkbox" />
             Add custom input
@@ -169,16 +159,10 @@
             <button disabled class="site-btn grey-btn">Run</button>
             <button disabled class="site-btn green-btn">Submit</button>
           </div>
-          <div
-            v-if="!judgingMode && !solved"
-            class="problem-section-custom-inputs d-flex"
-          >
+          <div v-if="!judgingMode && !solved" class="problem-section-custom-inputs d-flex">
             <div v-for="customInput in customInputs" :key="customInput.name">
               <h6>{{ customInput.type }} {{ customInput.name }}</h6>
-              <input
-                :type="customInput.inputType"
-                placeholder="Test against custom input"
-              />
+              <input :type="customInput.inputType" placeholder="Test against custom input" />
             </div>
           </div>
           <div
@@ -192,10 +176,7 @@
             <img :src="require('./../assets/images/judgingImg.svg')" />
           </div>
         </div>
-        <div
-          class="problem-section-editor-editorial d-flex"
-          v-if="activeTab === 'editorial'"
-        >
+        <div class="problem-section-editor-editorial d-flex" v-if="activeTab === 'editorial'">
           <p>Did you find this useful?</p>
           <svg
             width="18px"
@@ -205,23 +186,14 @@
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
           >
-            <g
-              id="Page-1"
-              stroke="none"
-              stroke-width="1"
-              fill="none"
-              fill-rule="evenodd"
-            >
+            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
               <g
                 id="Problem-Page---Editorial"
                 transform="translate(-305.000000, -2000.000000)"
                 fill="#CCCCCC"
                 fill-rule="nonzero"
               >
-                <g
-                  id="Thumbs-Up"
-                  transform="translate(305.000000, 2000.000000)"
-                >
+                <g id="Thumbs-Up" transform="translate(305.000000, 2000.000000)">
                   <path
                     d="M0,15.9843444 L3.26632272,15.9843444 L3.26632272,6.40313112 L0,6.40313112 L0,15.9843444 Z M17.964775,7.20156556 C17.964775,6.32328767 17.2298523,5.60469667 16.3316136,5.60469667 L11.1871553,5.60469667 L12.003736,1.93189824 C12.003736,1.85205479 12.003736,1.77221135 12.003736,1.69236791 C12.003736,1.37299413 11.8404199,1.05362035 11.6771357,0.81409002 L10.778865,0.0156555773 L5.38943249,5.2853229 C5.06280021,5.52485323 4.89948408,5.92407045 4.89948408,6.40313112 L4.89948408,14.3874755 C4.89948408,15.2657534 5.63440669,15.9843444 6.53264544,15.9843444 L13.8818716,15.9843444 C14.5351361,15.9843444 15.1067426,15.5851272 15.3517168,15.0262231 L17.8014588,9.35730724 C17.8831169,9.19762035 17.8831169,8.95809002 17.8831169,8.79840313 L17.8831169,7.20153425 L17.964775,7.20153425 C17.964775,7.281409 17.964775,7.20156556 17.964775,7.20156556 Z"
                     id="Shape"
@@ -238,23 +210,14 @@
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
           >
-            <g
-              id="Page-1"
-              stroke="none"
-              stroke-width="1"
-              fill="none"
-              fill-rule="evenodd"
-            >
+            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
               <g
                 id="Problem-Page---Editorial"
                 transform="translate(-331.000000, -2000.000000)"
                 fill="#CCCCCC"
                 fill-rule="nonzero"
               >
-                <g
-                  id="Thumbs-Down"
-                  transform="translate(331.000000, 2000.000000)"
-                >
+                <g id="Thumbs-Down" transform="translate(331.000000, 2000.000000)">
                   <path
                     d="M0,15.9843444 L3.26632272,15.9843444 L3.26632272,6.40313112 L0,6.40313112 L0,15.9843444 Z M17.964775,7.20156556 C17.964775,6.32328767 17.2298523,5.60469667 16.3316136,5.60469667 L11.1871553,5.60469667 L12.003736,1.93189824 C12.003736,1.85205479 12.003736,1.77221135 12.003736,1.69236791 C12.003736,1.37299413 11.8404199,1.05362035 11.6771357,0.81409002 L10.778865,0.0156555773 L5.38943249,5.2853229 C5.06280021,5.52485323 4.89948408,5.92407045 4.89948408,6.40313112 L4.89948408,14.3874755 C4.89948408,15.2657534 5.63440669,15.9843444 6.53264544,15.9843444 L13.8818716,15.9843444 C14.5351361,15.9843444 15.1067426,15.5851272 15.3517168,15.0262231 L17.8014588,9.35730724 C17.8831169,9.19762035 17.8831169,8.95809002 17.8831169,8.79840313 L17.8831169,7.20153425 L17.964775,7.20153425 C17.964775,7.281409 17.964775,7.20156556 17.964775,7.20156556 Z"
                     id="Shape"
@@ -266,9 +229,7 @@
           </svg>
         </div>
         <div class="problem-section-solved white-bg" v-if="solved">
-          <div
-            class="problem-section-solved-header d-flex justify-content-between"
-          >
+          <div class="problem-section-solved-header d-flex justify-content-between">
             <div class="problem-section-solved-header-info">
               <h3 class="marg-0">Congratulations</h3>
               <p>Whoaa! You solved this challenge.</p>
@@ -288,21 +249,27 @@
           <div class="problem-section-test-cases active">
             <h4 class="marg-0">Test Case 1</h4>
             <div class="problem-section-test-case">
-              <p><b>Input</b>(stdin)</p>
+              <p>
+                <b>Input</b>(stdin)
+              </p>
               <div>
                 <p>The first line</p>
                 <p>The second line</p>
               </div>
             </div>
             <div class="problem-section-test-case">
-              <p><b>Input</b>(stdin)</p>
+              <p>
+                <b>Input</b>(stdin)
+              </p>
               <div>
                 <p>The first line</p>
                 <p>The second line</p>
               </div>
             </div>
             <div class="problem-section-test-case">
-              <p><b>Input</b>(stdin)</p>
+              <p>
+                <b>Input</b>(stdin)
+              </p>
               <div>
                 <p>The first line</p>
                 <p>The second line</p>
@@ -312,21 +279,27 @@
           <div class="problem-section-test-cases">
             <h4 class="marg-0">Test Case 2</h4>
             <div class="problem-section-test-case">
-              <p><b>Input</b>(stdin)</p>
+              <p>
+                <b>Input</b>(stdin)
+              </p>
               <div>
                 <p>The first line</p>
                 <p>The second line</p>
               </div>
             </div>
             <div class="problem-section-test-case">
-              <p><b>Input</b>(stdin)</p>
+              <p>
+                <b>Input</b>(stdin)
+              </p>
               <div>
                 <p>The first line</p>
                 <p>The second line</p>
               </div>
             </div>
             <div class="problem-section-test-case">
-              <p><b>Input</b>(stdin)</p>
+              <p>
+                <b>Input</b>(stdin)
+              </p>
               <div>
                 <p>The first line</p>
                 <p>The second line</p>
@@ -345,18 +318,20 @@ import { mapActions, mapState } from "vuex";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import Editor from "../components/Editor";
+import NotFoundText from "../components/NotFoundText";
+import Loader from "../components/Loader";
 export default {
   data() {
     return {
-      activeTab: "description",
-      judgingMode: false,
-      solved: false
+      activeTab: "description"
     };
   },
   components: {
     Navbar,
     Footer,
-    Editor
+    Editor,
+    NotFoundText,
+    Loader
   },
   computed: {
     ...mapState("problem", [
@@ -368,7 +343,10 @@ export default {
       "frequency",
       "rating",
       "code",
-      "customInputs"
+      "customInputs",
+      "judgingMode",
+      "solved",
+      "loading"
     ])
   },
   methods: {
@@ -383,7 +361,7 @@ export default {
     }
   },
   created() {
-    this.getProblem();
+    this.getProblem({ url: this.$route.params.name });
   }
 };
 </script>

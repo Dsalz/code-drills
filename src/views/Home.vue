@@ -1,22 +1,26 @@
 <template>
   <div>
     <Navbar />
-    <NotFoundText item="page" />
+    <div class="home-wrapper"></div>
     <Footer />
   </div>
 </template>
 <script>
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
-import NotFoundText from "../components/NotFoundText";
 export default {
   data() {
     return {};
   },
   components: {
     Navbar,
-    Footer,
-    NotFoundText
+    Footer
   }
 };
 </script>
+
+<style scoped>
+.home-wrapper {
+  height: calc(100vh - 200px);
+}
+</style>

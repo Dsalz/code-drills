@@ -17,28 +17,27 @@
           </svg>
         </button>
       </div>
-      <div
-        class="profile-section-info d-flex justify-content-between align-items-center"
-      >
+      <div class="profile-section-info d-flex justify-content-between align-items-center">
         <div class="profile-section-info-text">
           <h1>{{ name }}</h1>
           <div>
-            <p>
-              {{ job }}
-            </p>
+            <p>{{ job }}</p>
             <p>{{ location }}</p>
           </div>
           <p>{{ number }} | {{ email }}</p>
         </div>
         <div class="profile-section-info-img">
-          <img :src="levelImage" />
+          <img :src="images[level]" />
         </div>
       </div>
     </section>
     <section class="profile-section-data white-bg gen-padding">
       <div class="profile-section-about bordered white-bg">
         <h3 class="profile-section-data-header">About</h3>
-        <p>{{ about }} <a href="#" class="green-link">Read More </a></p>
+        <p>
+          {{ about }}
+          <a href="#" class="green-link">Read More</a>
+        </p>
       </div>
       <div class="profile-section-exp bordered white-bg">
         <h3 class="profile-section-data-header">Experience</h3>
@@ -72,37 +71,29 @@
 		C94.49,36.18,93.596,35.284,92.49,35.284z"
                 />
               </g>
-              <g></g>
-              <g></g>
-              <g></g>
-              <g></g>
-              <g></g>
-              <g></g>
-              <g></g>
-              <g></g>
-              <g></g>
-              <g></g>
-              <g></g>
-              <g></g>
-              <g></g>
-              <g></g>
-              <g></g>
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
+              <g />
             </svg>
           </button>
         </div>
-        <div
-          class="profile-info-block-item d-flex"
-          v-for="item in experience"
-          :key="item.company"
-        >
+        <div class="profile-info-block-item d-flex" v-for="item in experience" :key="item.company">
           <img :src="item.companyUrl" :alt="item.company" />
           <div class="profile-info-block-info">
             <h4>{{ item.company }}</h4>
-            <div
-              v-for="job in item.jobs"
-              :key="job.title"
-              class="profile-info-block-data"
-            >
+            <div v-for="job in item.jobs" :key="job.title" class="profile-info-block-data">
               <p>{{ job.title }}</p>
               <p>{{ job.duration }}</p>
               <p>{{ job.location }}</p>
@@ -145,19 +136,11 @@
             </svg>
           </button>
         </div>
-        <div
-          class="profile-info-block-item d-flex"
-          v-for="item in education"
-          :key="item.school"
-        >
+        <div class="profile-info-block-item d-flex" v-for="item in education" :key="item.school">
           <img :src="item.schoolUrl" :alt="item.school" />
           <div class="profile-info-block-info">
             <h4>{{ item.school }}</h4>
-            <div
-              v-for="course in item.courses"
-              :key="course.title"
-              class="profile-info-block-data"
-            >
+            <div v-for="course in item.courses" :key="course.title" class="profile-info-block-data">
               <p>{{ course.title }}</p>
               <p>{{ course.duration }}</p>
               <p>{{ course.location }}</p>
@@ -168,11 +151,7 @@
       <div class="profile-section-skills white-bg">
         <h3 class="profile-section-data-header">Skills</h3>
         <div class="profile-section-skill-items d-flex">
-          <article
-            class="profile-section-skill-item d-flex"
-            v-for="(skill, i) in skills"
-            :key="i"
-          >
+          <article class="profile-section-skill-item d-flex" v-for="(skill, i) in skills" :key="i">
             <img :src="skill.image" />
             <p>
               {{ skill.title }}
@@ -202,98 +181,36 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import beginnerImg from "@/assets/images/Beginner.svg";
 export default {
   data() {
     return {
-      name: "Balajiganapathi",
-      job: "SDE 2 at Uber India",
-      location: "Bengaluru, Karnataka, India",
-      number: "+91 9876543210",
-      email: "www.myemailid@provider.com",
-      image: "https://placehold.it/100",
-      levelImage: beginnerImg,
-      about:
-        "I have a knack for solving interesting, challenging problems using cutting edge technologies. I was part of the core tech teams at 3 startups at Directi - Zeta, Flock and FlockMail. I helped design and ramp up their core services. I completed my masters in computer science from IIT Bombay. I have represented my college at International Collegiate Programming Contest (ICPC) world finals 2014 held at Ekaterinberg, Russia. I have also been on the problem setting and judging panel of the Indian regionals of ICPC.",
-      experience: [
-        {
-          company: "Uber India Systems Private Limited",
-          companyUrl: "https://placehold.it/100",
-          jobs: [
-            {
-              title: "SDE 2",
-              duration: "Feb 2019 - Present | 8 mos",
-              location: "Bengaluru, India"
-            }
-          ]
-        },
-        {
-          company: "Directi",
-          companyUrl: "https://placehold.it/100",
-          jobs: [
-            {
-              title: "Sr. Platform Engineer",
-              duration: "Jul 2018 - Feb 2019 | 8 mos",
-              location: "Bengaluru, India"
-            },
-
-            {
-              title: "Platform Engineer",
-              duration: "Jul 2015 - Jun 2018 | 3 yrs",
-              location: "Bengaluru, India"
-            }
-          ]
-        }
-      ],
-      education: [
-        {
-          school: "Indian Institute of Engineering, Bombay",
-          schoolUrl: "https://placehold.it/100",
-          courses: [
-            {
-              title: "Master of Technology (M.Tech), Computer Science",
-              duration: "2013 - 2015",
-              location: "Mumbai, India"
-            }
-          ]
-        },
-        {
-          school: "Pillai's Institute of Information Technology",
-          schoolUrl: "https://placehold.it/100",
-          courses: [
-            {
-              title:
-                "Bachelor of Engineering, Electronics and Telecommunication",
-              duration: "2009 - 2012",
-              location: "Navi Mumbai, India"
-            }
-          ]
-        }
-      ],
-      skills: [
-        {
-          image: "https://placehold.it/100",
-          title: "Tree",
-          verified: true
-        },
-        {
-          image: "https://placehold.it/100",
-          title: "Maths",
-          verified: true
-        },
-        {
-          image: "https://placehold.it/100",
-          title: "Geometry",
-          verified: false
-        }
-      ]
+      images: {
+        beginner: beginnerImg
+      }
     };
   },
   components: {
     Navbar,
     Footer
+  },
+  computed: {
+    ...mapState("profile", [
+      "name",
+      "job",
+      "location",
+      "number",
+      "email",
+      "image",
+      "about",
+      "experience",
+      "education",
+      "skills",
+      "level"
+    ])
   },
   methods: {}
 };

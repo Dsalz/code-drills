@@ -1,8 +1,8 @@
 <template>
   <nav class="d-flex justify-content-between align-items-center gen-padding">
-    <div class="nav-logo d-flex align-items-center">
+    <router-link to="/" class="nav-logo d-flex align-items-center">
       <img :src="require('../../assets/images/Code-Drills.svg')" />
-    </div>
+    </router-link>
 
     <div class="nav-links d-flex align-items-center">
       <router-link class="hide-s" to="/problems">Problems</router-link>
@@ -10,10 +10,7 @@
       <router-link class="hide-s" to="/drills">Drills</router-link>
       <router-link class="hide-s" to="/about">About Us</router-link>
       <router-link class="hide-s" to="/contact">Contact Us</router-link>
-      <div
-        class="nav-profile d-flex align-items-center"
-        @click.stop="toggleMenu"
-      >
+      <div class="nav-profile d-flex align-items-center" @click.stop="toggleMenu">
         <img src="https://placehold.it/100" />
         <div v-if="showRespMenu" class="nav-resp-menu">
           <router-link to="/profile">Profile</router-link>

@@ -3,6 +3,7 @@ import Router from "vue-router";
 
 import problemRoutes from "./problem";
 import profileRoutes from "./profile";
+import homeRoutes from "./home";
 import NotFound from "../views/NotFound.vue";
 
 Vue.use(Router);
@@ -16,7 +17,7 @@ const router = new Router({
       component: {
         template: "<router-view></router-view>"
       },
-      children: [...problemRoutes, ...profileRoutes]
+      children: [...homeRoutes, ...problemRoutes, ...profileRoutes]
     },
     {
       path: "*",

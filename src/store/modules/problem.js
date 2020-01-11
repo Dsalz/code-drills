@@ -12,7 +12,8 @@ const siteService = new site.ContentViewServicePromiseClient(
 );
 
 const state = {
-  title: "Counting Valleys",
+  loading: false,
+  title: "",
   tags: ["dp", "graphs", "category"],
   companies: ["Google", "Facebook", "Microsoft"],
   difficulty: "Easy",
@@ -41,7 +42,9 @@ const state = {
       type: "integer",
       inputType: "text"
     }
-  ]
+  ],
+  judgingMode: false,
+  solved: false
 };
 
 const actions = {
@@ -57,26 +60,32 @@ const actions = {
     // }
     // return tokenPromise;
   },
-  async fetchProblem({ commit, state, getters, dispatch }) {
-    var url = "two-sum"
+  async fetchProblem({ commit, state, getters, dispatch }, { url }) {
     console.log("TRYING TO FETCH");
-    console.log(commit);
+    commit("toggleLoading", true);
+
     return dispatch("ensureToken").then(__ => {
       var getContentRequest = new site_proto.GetContentRequest();
       var contentId = new content_proto.ContentId();
       var contentAddress = new content_proto.ContentAddress();
-      contentAddress.setContentType(proto.io.codedrills.proto.content.ContentType.PROBLEM);
+      contentAddress.setContentType(
+        proto.io.codedrills.proto.content.ContentType.PROBLEM
+      );
       contentAddress.setUrl(url);
-      contentId.setContentAddress(contentAddress)
+      contentId.setContentAddress(contentAddress);
       getContentRequest.setContentId(contentId);
 
-      return siteService.getContent(getContentRequest, { "auth-token": getters.userToken })
+      return siteService
+        .getContent(getContentRequest, { "auth-token": getters.userToken })
         .then(res => {
           console.log("SUCCESS", res.toObject());
           commit("setProblem", res.toObject().contentView);
         })
         .catch(err => {
           console.log("ERROR", err);
+        })
+        .finally(() => {
+          commit("toggleLoading", false);
         });
     });
   }
@@ -93,6 +102,10 @@ const getters = {
 };
 
 const mutations = {
+  toggleLoading(state, content) {
+    state.loading = content;
+  },
+
   setProblem(state, content) {
     state.title = content.title;
     var problemView = content.dataView.problemView;
@@ -102,16 +115,20 @@ const mutations = {
     //state.rating = content.metaData.rating; //TODO: This is causing an error
     var tags = [];
     var companies = [];
-    for(var i = 0; i < content.metaData.tagsList.length; ++i) {
+    for (var i = 0; i < content.metaData.tagsList.length; ++i) {
       var t = content.metaData.tagsList[i];
       var parts = t.split("/");
       // TODO: titlecase parts[1]
-      if(parts[0] === "topic") tags.push(parts[1]);
+      if (parts[0] === "topic") tags.push(parts[1]);
       else companies.push(parts[1]);
     }
     state.tags = tags;
     state.companies = companies;
-    state.customInputs = problemMeta.argsList.map(a => ({name: a.name, type: "int[]", inputType: "text"}));
+    state.customInputs = problemMeta.argsList.map(a => ({
+      name: a.name,
+      type: "int[]",
+      inputType: "text"
+    }));
     state.accuracy = problemStats.accuracy; // TODO: Format as xx.yy%
     state.difficulty = ["Easy", "Medium", "Hard"][problemStats.difficulty];
     state.frequency = "Often";
