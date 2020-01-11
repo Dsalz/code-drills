@@ -12,9 +12,12 @@ const siteService = new site.ContentViewServicePromiseClient(
 );
 
 const state = {
-  name: "Balajiganapathi",
+  firstName: "Balajiganapathi",
+  lastName: "",
   job: "SDE 2 at Uber India",
-  location: "Bengaluru, Karnataka, India",
+  country: "India",
+  state: "Karnataka",
+  city: "Bengaluru",
   number: "+91 9876543210",
   email: "www.myemailid@provider.com",
   image: "https://placehold.it/100",
@@ -91,14 +94,28 @@ const state = {
       title: "Geometry",
       verified: false
     }
-  ]
+  ],
+  editingOverview: false,
+  editingExperience: false,
+  addExperience: false
 };
 
-const actions = {};
+const actions = {
+  editSection({ commit }, section) {
+    commit("TOGGLE_EDIT_SECTION", { section, value: true });
+  },
+  closeEditSection({ commit }, section) {
+    commit("TOGGLE_EDIT_SECTION", { section, value: false });
+  }
+};
 
 const getters = {};
 
-const mutations = {};
+const mutations = {
+  TOGGLE_EDIT_SECTION(state, { section, value }) {
+    state[section] = value;
+  }
+};
 
 export default {
   namespaced: true,

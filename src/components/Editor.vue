@@ -1,15 +1,12 @@
 <template>
   <div class="site-editor">
-    <div class="site-editor-header d-flex justify-content-between">
+    <div v-if="!submissionMode" class="site-editor-header d-flex justify-content-between white-bg">
       <select class="site-editor-lang site-select" v-model="cmOptions.mode">
         <option value="text/clike">C++</option>
         <option value="text/python">Python</option>
         <option value="text/javascript">Javascript</option>
       </select>
-      <div
-        class="site-editor-options d-flex align-items-center"
-        v-if="!editorialMode"
-      >
+      <div class="site-editor-options d-flex align-items-center" v-if="!editorialMode">
         <select class="site-select" v-model="cmOptions.theme">
           <option value="idea">Idea</option>
           <option value="dracula">Dracular</option>
@@ -73,6 +70,34 @@
         </div>
       </div>
     </div>
+    <div v-if="submissionMode" class="site-editor-submission-header white-bg">
+      <h2 class="section-header">Submission Details</h2>
+      <div class="site-editor-submission-data d-flex justify-content-between align-items-center">
+        <div class="site-editor-submission-info d-flex">
+          <div>
+            <h5>Result</h5>
+            <p>{{ submissionData.result }}</p>
+          </div>
+          <div>
+            <h5>Time</h5>
+            <p>{{ submissionData.time }}</p>
+          </div>
+          <div>
+            <h5>Time Limit</h5>
+            <p>{{ submissionData.timeLimit }}</p>
+          </div>
+          <div>
+            <h5>Memory Limit</h5>
+            <p>{{ submissionData.memoryLimit }}</p>
+          </div>
+          <div>
+            <h5>Test Cases Passed</h5>
+            <p>{{ submissionData.passedCases }}</p>
+          </div>
+        </div>
+        <button class="site-btn green-btn">Edit Code</button>
+      </div>
+    </div>
     <hr />
     <CodeMirror
       ref="myCm"
@@ -82,8 +107,7 @@
       @focus="onCmFocus"
       @input="onCodeChange"
       :class="fontSize"
-    >
-    </CodeMirror>
+    ></CodeMirror>
   </div>
 </template>
 
@@ -139,6 +163,13 @@ export default {
     editorialMode: {
       type: Boolean,
       default: false
+    },
+    submissionMode: {
+      type: Boolean,
+      default: false
+    },
+    submissionData: {
+      type: Object
     }
   },
   components: {
@@ -176,13 +207,43 @@ export default {
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.12);
 }
 .site-editor-header {
-  background-color: #ffffff;
   padding: 16px;
-  font-size: 14px;
 }
 
-.site-editor-header > * {
+.site-editor-header,
+.site-editor-submission-header,
+.site-editor-submission-info h5,
+.site-editor-submission-info p {
+  font-size: 14px;
+}
+.site-editor-submission-header {
+  padding: 30px;
+}
+
+.site-editor-submission-info {
+  flex-wrap: wrap;
+}
+
+.site-editor-submission-info > div {
+  margin: 0 50px 10px 0;
+}
+
+.site-editor-submission-info h5 {
+  font-weight: 500;
+}
+
+.site-editor-submission-info h5,
+.site-editor-submission-info p {
+  margin: 0 0 4px;
+}
+.site-editor-header > *,
+.site-editor-submission-info p {
   font-weight: 300;
+}
+
+.site-editor-submission-header button {
+  height: 40px;
+  min-width: 90px;
 }
 
 .site-editor-options select {
@@ -223,6 +284,16 @@ export default {
 @media screen and (max-width: 720px) {
   .site-editor-options select {
     display: none;
+  }
+  .site-editor-submission-data {
+    flex-wrap: wrap;
+  }
+
+  .site-editor-submission-info {
+    width: 100%;
+  }
+  .site-editor-submission-info > div {
+    margin-right: 25px;
   }
 }
 </style>

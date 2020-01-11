@@ -44,6 +44,13 @@ const state = {
       inputType: "text"
     }
   ],
+  submissionData: {
+    result: "Accepted",
+    time: "2 MS",
+    timeLimit: "5 MS",
+    memoryLimit: "37 MB",
+    passedCases: "29"
+  },
   judgingMode: false,
   solved: false,
   runtimeError: false,

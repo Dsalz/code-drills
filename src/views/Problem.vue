@@ -84,7 +84,7 @@
 
       <div class="problem-section-description">
         <div class="problem-section-submission white-bg" v-if="activeTab === 'submission'">
-          <h2>Submission History</h2>
+          <h2 class="section-header">Submission History</h2>
           <table>
             <thead class="white-bg">
               <tr>
@@ -207,6 +207,8 @@
         </div>
         <Editor
           :editorialMode="activeTab === 'editorial'"
+          :submissionMode="activeTab === 'submission'"
+          :submissionData="submissionData"
           :code="code"
           :onCodeChange="onCmCodeChange"
         />
@@ -602,7 +604,8 @@ export default {
       "premiumOnly",
       "runtimeError",
       "timeTaken",
-      "memoryConsumed"
+      "memoryConsumed",
+      "submissionData"
     ]),
     ...mapState("user", ["hasPremiumAccess"]),
     premiumBlock() {
@@ -839,9 +842,7 @@ export default {
 .problem-section-solved h6,
 .problem-section-test-case > p b,
 .problem-section-test-cases h4,
-.problem-section-submission h2,
 .problem-premium-block-info h2,
-.problem-section-submission h2,
 .problem-section-submission table thead,
 .problem-section-title-info div h5,
 .problem-section-description h5,
@@ -968,11 +969,6 @@ export default {
   border-radius: 5px;
   box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.12);
   padding: 30px;
-}
-
-.problem-section-submission h2 {
-  font-size: 24px;
-  margin: 0 0 18px;
 }
 
 .problem-section-submission table {

@@ -6,7 +6,7 @@
     >
       <div class="profile-section-avatar">
         <img class="br-50" :src="image" />
-        <button class="br-50 green-circle">
+        <button class="br-50 green-circle" @click="() => editSection('editingOverview')">
           <svg viewBox="0 0 492.49284 492" xmlns="http://www.w3.org/2000/svg">
             <path
               d="m304.140625 82.472656-270.976563 270.996094c-1.363281 1.367188-2.347656 3.09375-2.816406 4.949219l-30.035156 120.554687c-.898438 3.628906.167969 7.488282 2.816406 10.136719 2.003906 2.003906 4.734375 3.113281 7.527344 3.113281.855469 0 1.730469-.105468 2.582031-.320312l120.554688-30.039063c1.878906-.46875 3.585937-1.449219 4.949219-2.8125l271-270.976562zm0 0"
@@ -19,10 +19,10 @@
       </div>
       <div class="profile-section-info d-flex justify-content-between align-items-center">
         <div class="profile-section-info-text">
-          <h1>{{ name }}</h1>
+          <h1>{{ firstName }} {{ lastName }}</h1>
           <div>
             <p>{{ job }}</p>
-            <p>{{ location }}</p>
+            <p>{{ state }}, {{ city }}, {{ country }}</p>
           </div>
           <p>{{ number }} | {{ email }}</p>
         </div>
@@ -32,17 +32,211 @@
       </div>
     </section>
     <section class="profile-section-data white-bg gen-padding">
-      <div class="profile-section-about bordered white-bg">
+      <div v-if="!editingOverview" class="profile-section-about bordered white-bg">
         <h3 class="profile-section-data-header">About</h3>
         <p>
           {{ about }}
           <a href="#" class="green-link">Read More</a>
         </p>
       </div>
-      <div class="profile-section-exp bordered white-bg">
+      <div v-if="editingOverview" class="profile-section-edit-section bordered white-bg">
+        <h3 class="profile-section-data-header">Overview</h3>
+        <div class="d-flex profile-input-row">
+          <div class="profile-input">
+            <label for="firstName">First Name</label>
+            <input id="firstName" type="text" v-model="firstName" />
+          </div>
+          <div class="profile-input">
+            <label for="lastName">Last Name</label>
+            <input id="lastName" type="text" v-model="lastName" />
+          </div>
+        </div>
+        <div class="d-flex profile-input-row">
+          <div class="profile-input">
+            <label for="phone">Phone</label>
+            <input id="phone" type="text" v-model="number" />
+          </div>
+          <div class="profile-input">
+            <label for="email">Email</label>
+            <input id="email" type="text" v-model="email" />
+          </div>
+        </div>
+        <div class="d-flex profile-input-row">
+          <div class="profile-input">
+            <label for="country">Country</label>
+            <input id="country" type="text" v-model="country" />
+          </div>
+          <div class="profile-input">
+            <label for="state">State</label>
+            <input id="state" type="text" v-model="state" />
+          </div>
+          <div class="profile-input">
+            <label for="city">City</label>
+            <input id="city" type="text" v-model="city" />
+          </div>
+        </div>
+        <div class="profile-input-row">
+          <div class="profile-input profile-textarea-input">
+            <label for="about">About</label>
+            <textarea id="about" v-model="about"></textarea>
+          </div>
+        </div>
+        <div class="profile-edit-submit d-flex justify-content-end">
+          <button class="site-btn green-btn" @click="() => closeEditSection('editingOverview')">Save</button>
+        </div>
+      </div>
+      <div v-if="addExperience" class="profile-section-edit-section bordered white-bg">
+        <h3 class="profile-section-data-header">Add new experience</h3>
+        <div class="d-flex profile-input-row">
+          <div class="profile-input">
+            <label for="company">Company</label>
+            <input
+              placeholder="eg. Google"
+              id="company"
+              type="text"
+              v-model="newExperience.company"
+            />
+          </div>
+          <div class="profile-input">
+            <label for="title">Title</label>
+            <input
+              placeholder="eg. Staff Engineer"
+              id="title"
+              type="text"
+              v-model="newExperience.title"
+            />
+          </div>
+          <div class="profile-input">
+            <label for="location">Location</label>
+            <input
+              placeholder="eg. London, United Kingdom"
+              id="location"
+              type="text"
+              v-model="newExperience.location"
+            />
+          </div>
+        </div>
+        <div class="d-flex profile-input-row">
+          <div class="profile-input">
+            <label for="phone">Start Date</label>
+            <div class="d-flex justify-content-between">
+              <select class="site-select" v-model="newExperience.startMonth">
+                <option disabled value>Month</option>
+                <option v-for="month in months" :key="month" :value="month">{{ month }}</option>
+              </select>
+              <select class="site-select" v-model="newExperience.startYear">
+                <option disabled value>Year</option>
+                <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="profile-input">
+            <label for="phone">End Date</label>
+            <div v-if="!newExperience.currentlyWorkHere" class="d-flex justify-content-between">
+              <select class="site-select" v-model="newExperience.endMonth">
+                <option disabled value>Month</option>
+                <option v-for="month in months" :key="month" :value="month">{{ month }}</option>
+              </select>
+              <select class="site-select" v-model="newExperience.endYear">
+                <option disabled value>Year</option>
+                <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+              </select>
+            </div>
+            <label class="profile-edit-checkbox d-flex align-items-center">
+              <input
+                class="site-checkbox"
+                type="checkbox"
+                v-model="newExperience.currentlyWorkHere"
+              />
+              I currently work here
+            </label>
+          </div>
+        </div>
+        <div class="profile-edit-submit d-flex justify-content-end">
+          <button class="site-btn green-btn" @click="() => closeEditSection('addExperience')">Save</button>
+        </div>
+      </div>
+      <div v-if="editingExperience" class="profile-section-edit-section bordered white-bg">
+        <h3 class="profile-section-data-header">Edit experience</h3>
+        <div class="d-flex profile-input-row">
+          <div class="profile-input">
+            <label for="company">Company</label>
+            <input
+              placeholder="eg. Google"
+              id="company"
+              type="text"
+              v-model="experience[0].company"
+            />
+          </div>
+          <div class="profile-input">
+            <label for="title">Title</label>
+            <input
+              placeholder="eg. Staff Engineer"
+              id="title"
+              type="text"
+              v-model="experience[0].jobs[0].title"
+            />
+          </div>
+          <div class="profile-input">
+            <label for="location">Location</label>
+            <input
+              placeholder="eg. London, United Kingdom"
+              id="location"
+              type="text"
+              v-model="experience[0].jobs[0].location"
+            />
+          </div>
+        </div>
+        <div class="d-flex profile-input-row">
+          <div class="profile-input">
+            <label for="phone">Start Date</label>
+            <div class="d-flex justify-content-between">
+              <select class="site-select" v-model="newExperience.startMonth">
+                <option disabled value>Month</option>
+                <option v-for="month in months" :key="month" :value="month">{{ month }}</option>
+              </select>
+              <select class="site-select" v-model="newExperience.startYear">
+                <option disabled value>Year</option>
+                <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="profile-input">
+            <label for="phone">End Date</label>
+            <div v-if="!newExperience.currentlyWorkHere" class="d-flex justify-content-between">
+              <select class="site-select" v-model="newExperience.endMonth">
+                <option disabled value>Month</option>
+                <option v-for="month in months" :key="month" :value="month">{{ month }}</option>
+              </select>
+              <select class="site-select" v-model="newExperience.endYear">
+                <option disabled value>Year</option>
+                <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+              </select>
+            </div>
+            <label class="profile-edit-checkbox d-flex align-items-center">
+              <input
+                class="site-checkbox"
+                type="checkbox"
+                v-model="newExperience.currentlyWorkHere"
+              />
+              I currently work here
+            </label>
+          </div>
+        </div>
+        <div class="profile-edit-submit d-flex justify-content-end">
+          <button
+            class="site-btn green-btn"
+            @click="() => closeEditSection('editingExperience')"
+          >Save</button>
+        </div>
+      </div>
+      <div
+        v-if="!addExperience && !editingExperience"
+        class="profile-section-exp bordered white-bg"
+      >
         <h3 class="profile-section-data-header">Experience</h3>
         <div class="profile-section-btns">
-          <button class="br-50 green-circle">
+          <button class="br-50 green-circle" @click="() => editSection('editingExperience')">
             <svg viewBox="0 0 492.49284 492" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="m304.140625 82.472656-270.976563 270.996094c-1.363281 1.367188-2.347656 3.09375-2.816406 4.949219l-30.035156 120.554687c-.898438 3.628906.167969 7.488282 2.816406 10.136719 2.003906 2.003906 4.734375 3.113281 7.527344 3.113281.855469 0 1.730469-.105468 2.582031-.320312l120.554688-30.039063c1.878906-.46875 3.585937-1.449219 4.949219-2.8125l271-270.976562zm0 0"
@@ -52,7 +246,7 @@
               />
             </svg>
           </button>
-          <button class="br-50 green-circle">
+          <button class="br-50 green-circle" @click="() => editSection('addExperience')">
             <svg
               version="1.1"
               id="Capa_1"
@@ -181,15 +375,39 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapActions } from "vuex";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import beginnerImg from "@/assets/images/Beginner.svg";
 export default {
   data() {
     return {
+      months: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+      ],
       images: {
         beginner: beginnerImg
+      },
+      newExperience: {
+        company: "",
+        title: "",
+        location: "",
+        startMonth: "",
+        startYear: "",
+        endMonth: "",
+        endYear: "",
+        currentlyWorkHere: false
       }
     };
   },
@@ -199,9 +417,12 @@ export default {
   },
   computed: {
     ...mapState("profile", [
-      "name",
+      "firstName",
+      "lastName",
       "job",
-      "location",
+      "country",
+      "state",
+      "city",
       "number",
       "email",
       "image",
@@ -209,10 +430,20 @@ export default {
       "experience",
       "education",
       "skills",
-      "level"
+      "level",
+      "editingOverview",
+      "editingExperience",
+      "addExperience"
     ])
   },
-  methods: {}
+  methods: {
+    ...mapActions("profile", ["editSection", "closeEditSection"])
+  },
+  created() {
+    this.years = Array(100)
+      .fill(undefined)
+      .map((val, i) => new Date().getFullYear() - i);
+  }
 };
 </script>
 
@@ -239,6 +470,7 @@ export default {
   position: absolute;
   bottom: 20px;
   right: 10px;
+  cursor: pointer;
 }
 
 .profile-section-info {
@@ -246,7 +478,6 @@ export default {
 }
 
 .profile-section-info-text {
-  font-size: 14px;
   font-weight: 300;
 }
 
@@ -292,7 +523,6 @@ export default {
 }
 
 .bordered p {
-  font-size: 14px;
   font-weight: 300;
 }
 
@@ -380,6 +610,89 @@ export default {
   right: -30px;
   width: 24px;
   height: 24px;
+}
+
+.profile-input-row {
+  flex-wrap: wrap;
+}
+
+.profile-input {
+  margin: 0 30px 30px 0;
+  width: 270px;
+}
+
+.profile-input label {
+  margin-bottom: 2px;
+  font-weight: 300;
+}
+
+.profile-input input[type="text"],
+.profile-input textarea {
+  background: transparent;
+  border: 1px solid #eeeeee;
+  border-radius: 5px;
+  width: 100%;
+  display: block;
+  padding: 10px 8px;
+}
+
+.profile-input input[type="text"] {
+  height: 20px;
+}
+
+.profile-section-edit-section .profile-section-data-header {
+  margin-bottom: 16px;
+}
+
+.profile-textarea-input,
+.profile-input textarea,
+.profile-input label {
+  width: 100%;
+  margin-right: 0;
+}
+
+.profile-textarea-input,
+.profile-input textarea {
+  display: block;
+}
+
+.profile-input textarea {
+  height: 120px;
+  resize: none;
+  box-sizing: border-box;
+}
+
+.profile-edit-submit button {
+  width: 55px;
+  height: 40px;
+}
+
+.profile-input select.site-select {
+  width: 48%;
+  min-width: 48%;
+  border-color: #eee;
+}
+
+.profile-edit-checkbox {
+  margin-top: 8px;
+}
+
+.profile-input input.site-checkbox {
+  margin-right: 8px;
+}
+
+.profile-input label,
+.profile-input input,
+.profile-input textarea {
+  font-weight: 300;
+}
+
+.profile-section-info-text,
+.bordered p,
+.profile-input label,
+.profile-input input,
+.profile-input textarea {
+  font-size: 14px;
 }
 
 @media screen and (max-width: 1000px) {
