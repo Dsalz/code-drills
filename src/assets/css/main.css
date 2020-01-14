@@ -184,6 +184,7 @@ input:checked + .slider:before {
 
 .green-link {
   color: #72dfd4;
+  cursor: pointer;
 }
 
 .green-circle {

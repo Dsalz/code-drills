@@ -5,7 +5,7 @@
       class="profile-section-header gen-padding grey-bg d-flex justify-content-between align-items-center"
     >
       <div class="profile-section-avatar">
-        <img class="br-50" :src="image" />
+        <img class="br-50" :src="userDetails.image" />
         <button class="br-50 green-circle" @click="() => editSection('editingOverview')">
           <svg viewBox="0 0 492.49284 492" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -19,15 +19,15 @@
       </div>
       <div class="profile-section-info d-flex justify-content-between align-items-center">
         <div class="profile-section-info-text">
-          <h1>{{ firstName }} {{ lastName }}</h1>
+          <h1>{{ userDetails.firstName }} {{ userDetails.lastName }}</h1>
           <div>
-            <p>{{ job }}</p>
-            <p>{{ state }}, {{ city }}, {{ country }}</p>
+            <p>{{ userDetails.job }}</p>
+            <p>{{ userDetails.state }}, {{ userDetails.city }}, {{ userDetails.country }}</p>
           </div>
-          <p>{{ number }} | {{ email }}</p>
+          <p>{{ userDetails.number }} | {{ userDetails.email }}</p>
         </div>
         <div class="profile-section-info-img">
-          <img :src="images[level]" />
+          <img :src="images[userDetails.level]" />
         </div>
       </div>
     </section>
@@ -35,8 +35,12 @@
       <div v-if="!editingOverview" class="profile-section-about bordered white-bg">
         <h3 class="profile-section-data-header">About</h3>
         <p>
-          {{ about }}
-          <a href="#" class="green-link">Read More</a>
+          {{ formatAbout }}
+          <a
+            v-if="shouldShortenAbout"
+            @click="() => this.toggleShortenedAbout(false)"
+            class="green-link"
+          >Read More</a>
         </p>
       </div>
       <div v-if="editingOverview" class="profile-section-edit-section bordered white-bg">
@@ -44,41 +48,56 @@
         <div class="d-flex profile-input-row">
           <div class="profile-input">
             <label for="firstName">First Name</label>
-            <input id="firstName" type="text" v-model="firstName" />
+            <input
+              placeholder="eg. Damola"
+              id="firstName"
+              type="text"
+              v-model="userDetails.firstName"
+            />
           </div>
           <div class="profile-input">
             <label for="lastName">Last Name</label>
-            <input id="lastName" type="text" v-model="lastName" />
+            <input
+              placeholder="eg. Salisu"
+              id="lastName"
+              type="text"
+              v-model="userDetails.lastName"
+            />
           </div>
         </div>
         <div class="d-flex profile-input-row">
           <div class="profile-input">
             <label for="phone">Phone</label>
-            <input id="phone" type="text" v-model="number" />
+            <input placeholder="eg. 000XXXXXX" id="phone" type="text" v-model="userDetails.number" />
           </div>
           <div class="profile-input">
             <label for="email">Email</label>
-            <input id="email" type="text" v-model="email" />
+            <input
+              placeholder="eg. salisu.damola@yahoo.com"
+              id="email"
+              type="text"
+              v-model="userDetails.email"
+            />
           </div>
         </div>
         <div class="d-flex profile-input-row">
           <div class="profile-input">
             <label for="country">Country</label>
-            <input id="country" type="text" v-model="country" />
+            <input placeholder="eg. India" id="country" type="text" v-model="userDetails.country" />
           </div>
           <div class="profile-input">
             <label for="state">State</label>
-            <input id="state" type="text" v-model="state" />
+            <input placeholder="eg. Karnataka" id="state" type="text" v-model="userDetails.state" />
           </div>
           <div class="profile-input">
             <label for="city">City</label>
-            <input id="city" type="text" v-model="city" />
+            <input placeholder="eg. Bengaluru" id="city" type="text" v-model="userDetails.city" />
           </div>
         </div>
         <div class="profile-input-row">
           <div class="profile-input profile-textarea-input">
             <label for="about">About</label>
-            <textarea id="about" v-model="about"></textarea>
+            <textarea id="about" v-model="userDetails.about"></textarea>
           </div>
         </div>
         <div class="profile-edit-submit d-flex justify-content-end">
@@ -87,153 +106,162 @@
       </div>
       <div v-if="addExperience" class="profile-section-edit-section bordered white-bg">
         <h3 class="profile-section-data-header">Add new experience</h3>
-        <div class="d-flex profile-input-row">
-          <div class="profile-input">
-            <label for="company">Company</label>
-            <input
-              placeholder="eg. Google"
-              id="company"
-              type="text"
-              v-model="newExperience.company"
-            />
-          </div>
-          <div class="profile-input">
-            <label for="title">Title</label>
-            <input
-              placeholder="eg. Staff Engineer"
-              id="title"
-              type="text"
-              v-model="newExperience.title"
-            />
-          </div>
-          <div class="profile-input">
-            <label for="location">Location</label>
-            <input
-              placeholder="eg. London, United Kingdom"
-              id="location"
-              type="text"
-              v-model="newExperience.location"
-            />
-          </div>
-        </div>
-        <div class="d-flex profile-input-row">
-          <div class="profile-input">
-            <label for="phone">Start Date</label>
-            <div class="d-flex justify-content-between">
-              <select class="site-select" v-model="newExperience.startMonth">
-                <option disabled value>Month</option>
-                <option v-for="month in months" :key="month" :value="month">{{ month }}</option>
-              </select>
-              <select class="site-select" v-model="newExperience.startYear">
-                <option disabled value>Year</option>
-                <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
-              </select>
-            </div>
-          </div>
-          <div class="profile-input">
-            <label for="phone">End Date</label>
-            <div v-if="!newExperience.currentlyWorkHere" class="d-flex justify-content-between">
-              <select class="site-select" v-model="newExperience.endMonth">
-                <option disabled value>Month</option>
-                <option v-for="month in months" :key="month" :value="month">{{ month }}</option>
-              </select>
-              <select class="site-select" v-model="newExperience.endYear">
-                <option disabled value>Year</option>
-                <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
-              </select>
-            </div>
-            <label class="profile-edit-checkbox d-flex align-items-center">
+        <form @submit.prevent="saveExperience">
+          <div class="d-flex profile-input-row">
+            <div class="profile-input">
+              <label for="company">Company</label>
               <input
-                class="site-checkbox"
-                type="checkbox"
-                v-model="newExperience.currentlyWorkHere"
+                placeholder="eg. Google"
+                id="company"
+                type="text"
+                v-model="newExperience.company"
+                required
               />
-              I currently work here
-            </label>
+            </div>
+            <div class="profile-input">
+              <label for="title">Title</label>
+              <input
+                placeholder="eg. Staff Engineer"
+                id="title"
+                type="text"
+                v-model="newExperience.job.title"
+                required
+              />
+            </div>
+            <div class="profile-input">
+              <label for="location">Location</label>
+              <input
+                placeholder="eg. London, United Kingdom"
+                id="location"
+                type="text"
+                v-model="newExperience.job.location"
+                required
+              />
+            </div>
           </div>
-        </div>
-        <div class="profile-edit-submit d-flex justify-content-end">
-          <button class="site-btn green-btn" @click="() => closeEditSection('addExperience')">Save</button>
-        </div>
+          <div class="d-flex profile-input-row">
+            <div class="profile-input">
+              <label for="phone">Start Date</label>
+              <div class="d-flex justify-content-between">
+                <select required class="site-select" v-model="newExperience.job.startMonth">
+                  <option disabled value>Month</option>
+                  <option v-for="month in months" :key="month" :value="month">{{ month }}</option>
+                </select>
+                <select required class="site-select" v-model="newExperience.job.startYear">
+                  <option disabled value>Year</option>
+                  <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="profile-input">
+              <label for="phone">End Date</label>
+              <div
+                v-if="!newExperience.job.currentlyWorkHere"
+                class="d-flex justify-content-between"
+              >
+                <select required class="site-select" v-model="newExperience.job.endMonth">
+                  <option disabled value>Month</option>
+                  <option v-for="month in months" :key="month" :value="month">{{ month }}</option>
+                </select>
+                <select required class="site-select" v-model="newExperience.job.endYear">
+                  <option disabled value>Year</option>
+                  <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+                </select>
+              </div>
+              <label class="profile-edit-checkbox d-flex align-items-center">
+                <input
+                  class="site-checkbox"
+                  type="checkbox"
+                  v-model="newExperience.job.currentlyWorkHere"
+                />
+                I currently work here
+              </label>
+            </div>
+          </div>
+          <div class="profile-edit-submit d-flex justify-content-end">
+            <button type="submit" class="site-btn green-btn">Save</button>
+          </div>
+        </form>
       </div>
       <div v-if="editingExperience" class="profile-section-edit-section bordered white-bg">
         <h3 class="profile-section-data-header">Edit experience</h3>
-        <div class="d-flex profile-input-row">
-          <div class="profile-input">
-            <label for="company">Company</label>
-            <input
-              placeholder="eg. Google"
-              id="company"
-              type="text"
-              v-model="experience[0].company"
-            />
-          </div>
-          <div class="profile-input">
-            <label for="title">Title</label>
-            <input
-              placeholder="eg. Staff Engineer"
-              id="title"
-              type="text"
-              v-model="experience[0].jobs[0].title"
-            />
-          </div>
-          <div class="profile-input">
-            <label for="location">Location</label>
-            <input
-              placeholder="eg. London, United Kingdom"
-              id="location"
-              type="text"
-              v-model="experience[0].jobs[0].location"
-            />
-          </div>
-        </div>
-        <div class="d-flex profile-input-row">
-          <div class="profile-input">
-            <label for="phone">Start Date</label>
-            <div class="d-flex justify-content-between">
-              <select class="site-select" v-model="newExperience.startMonth">
-                <option disabled value>Month</option>
-                <option v-for="month in months" :key="month" :value="month">{{ month }}</option>
-              </select>
-              <select class="site-select" v-model="newExperience.startYear">
-                <option disabled value>Year</option>
-                <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
-              </select>
+        <form @submit.prevent="updateExperience">
+          <div
+            class="profile-form-input-wrapper"
+            v-for="exp in experience"
+            :key="`${exp.company}-${exp.job.title}`"
+          >
+            <div class="d-flex profile-input-row">
+              <div class="profile-input">
+                <label for="company">Company</label>
+                <input
+                  required
+                  placeholder="eg. Google"
+                  id="company"
+                  type="text"
+                  v-model="exp.company"
+                />
+              </div>
+              <div class="profile-input">
+                <label for="title">Title</label>
+                <input
+                  placeholder="eg. Staff Engineer"
+                  id="title"
+                  type="text"
+                  v-model="exp.job.title"
+                  required
+                />
+              </div>
+              <div class="profile-input">
+                <label for="location">Location</label>
+                <input
+                  placeholder="eg. London, United Kingdom"
+                  id="location"
+                  type="text"
+                  v-model="exp.job.location"
+                  required
+                />
+              </div>
+            </div>
+            <div class="d-flex profile-input-row">
+              <div class="profile-input">
+                <label for="phone">Start Date</label>
+                <div class="d-flex justify-content-between">
+                  <select required class="site-select" v-model="exp.job.startMonth">
+                    <option disabled value>Month</option>
+                    <option v-for="month in months" :key="month" :value="month">{{ month }}</option>
+                  </select>
+                  <select required class="site-select" v-model="exp.job.startYear">
+                    <option disabled value>Year</option>
+                    <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="profile-input">
+                <label for="phone">End Date</label>
+                <div v-if="!exp.job.currentlyWorkHere" class="d-flex justify-content-between">
+                  <select class="site-select" v-model="exp.job.endMonth">
+                    <option disabled value>Month</option>
+                    <option v-for="month in months" :key="month" :value="month">{{ month }}</option>
+                  </select>
+                  <select class="site-select" v-model="exp.job.endYear">
+                    <option disabled value>Year</option>
+                    <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+                  </select>
+                </div>
+                <label class="profile-edit-checkbox d-flex align-items-center">
+                  <input class="site-checkbox" type="checkbox" v-model="exp.job.currentlyWorkHere" />
+                  I currently work here
+                </label>
+              </div>
             </div>
           </div>
-          <div class="profile-input">
-            <label for="phone">End Date</label>
-            <div v-if="!newExperience.currentlyWorkHere" class="d-flex justify-content-between">
-              <select class="site-select" v-model="newExperience.endMonth">
-                <option disabled value>Month</option>
-                <option v-for="month in months" :key="month" :value="month">{{ month }}</option>
-              </select>
-              <select class="site-select" v-model="newExperience.endYear">
-                <option disabled value>Year</option>
-                <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
-              </select>
-            </div>
-            <label class="profile-edit-checkbox d-flex align-items-center">
-              <input
-                class="site-checkbox"
-                type="checkbox"
-                v-model="newExperience.currentlyWorkHere"
-              />
-              I currently work here
-            </label>
+          <div class="profile-edit-submit d-flex justify-content-end">
+            <button class="site-btn green-btn" type="submit">Save</button>
           </div>
-        </div>
-        <div class="profile-edit-submit d-flex justify-content-end">
-          <button
-            class="site-btn green-btn"
-            @click="() => closeEditSection('editingExperience')"
-          >Save</button>
-        </div>
+        </form>
       </div>
-      <div
-        v-if="!addExperience && !editingExperience"
-        class="profile-section-exp bordered white-bg"
-      >
+      <div v-if="!editingExperience" class="profile-section-exp bordered white-bg">
         <h3 class="profile-section-data-header">Experience</h3>
         <div class="profile-section-btns">
           <button class="br-50 green-circle" @click="() => editSection('editingExperience')">
@@ -283,22 +311,187 @@
             </svg>
           </button>
         </div>
-        <div class="profile-info-block-item d-flex" v-for="item in experience" :key="item.company">
+        <div
+          class="profile-info-block-item d-flex"
+          v-for="item in groupExperience"
+          :key="item.company"
+        >
           <img :src="item.companyUrl" :alt="item.company" />
           <div class="profile-info-block-info">
             <h4>{{ item.company }}</h4>
             <div v-for="job in item.jobs" :key="job.title" class="profile-info-block-data">
               <p>{{ job.title }}</p>
-              <p>{{ job.duration }}</p>
+              <p>{{ job.startMonth }} {{ job.startYear }} - {{ job.currentlyWorkHere ? 'present' : `${job.endMonth} ${job.endYear}`}}</p>
               <p>{{ job.location }}</p>
             </div>
           </div>
         </div>
       </div>
-      <div class="profile-section-exp bordered white-bg">
+      <div v-if="addEducation" class="profile-section-edit-section bordered white-bg">
+        <h3 class="profile-section-data-header">Add new education</h3>
+        <form @submit.prevent="saveEducation">
+          <div class="d-flex profile-input-row">
+            <div class="profile-input">
+              <label for="school">School</label>
+              <input
+                placeholder="eg. Havard"
+                id="school"
+                type="text"
+                v-model="newEducation.school"
+                required
+              />
+            </div>
+            <div class="profile-input">
+              <label for="title">Degree</label>
+              <input
+                placeholder="eg. Bachelor of Engineering, Computer Engineering"
+                id="title"
+                type="text"
+                v-model="newEducation.course.title"
+                required
+              />
+            </div>
+            <div class="profile-input">
+              <label for="location">Location</label>
+              <input
+                placeholder="eg. London, United Kingdom"
+                id="location"
+                type="text"
+                v-model="newEducation.course.location"
+                required
+              />
+            </div>
+          </div>
+          <div class="d-flex profile-input-row">
+            <div class="profile-input">
+              <label for="phone">Start Date</label>
+              <div class="d-flex justify-content-between">
+                <select required class="site-select" v-model="newEducation.course.startMonth">
+                  <option disabled value>Month</option>
+                  <option v-for="month in months" :key="month" :value="month">{{ month }}</option>
+                </select>
+                <select required class="site-select" v-model="newEducation.course.startYear">
+                  <option disabled value>Year</option>
+                  <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+                </select>
+              </div>
+            </div>
+            <div class="profile-input">
+              <label for="phone">End Date</label>
+              <div
+                v-if="!newEducation.course.currentlySchoolHere"
+                class="d-flex justify-content-between"
+              >
+                <select required class="site-select" v-model="newEducation.course.endMonth">
+                  <option disabled value>Month</option>
+                  <option v-for="month in months" :key="month" :value="month">{{ month }}</option>
+                </select>
+                <select required class="site-select" v-model="newEducation.course.endYear">
+                  <option disabled value>Year</option>
+                  <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+                </select>
+              </div>
+              <label class="profile-edit-checkbox d-flex align-items-center">
+                <input
+                  class="site-checkbox"
+                  type="checkbox"
+                  v-model="newEducation.course.currentlySchoolHere"
+                />
+                I currently attend here
+              </label>
+            </div>
+          </div>
+          <div class="profile-edit-submit d-flex justify-content-end">
+            <button type="submit" class="site-btn green-btn">Save</button>
+          </div>
+        </form>
+      </div>
+      <div v-if="editingEducation" class="profile-section-edit-section bordered white-bg">
+        <h3 class="profile-section-data-header">Edit education</h3>
+        <form @submit.prevent="updateEducation">
+          <div
+            class="profile-form-input-wrapper"
+            v-for="edu in education"
+            :key="`${edu.school}-${edu.course.title}`"
+          >
+            <div class="d-flex profile-input-row">
+              <div class="profile-input">
+                <label for="school">School</label>
+                <input
+                  required
+                  placeholder="eg. Harvard"
+                  id="school"
+                  type="text"
+                  v-model="edu.school"
+                />
+              </div>
+              <div class="profile-input">
+                <label for="title">Degree</label>
+                <input
+                  placeholder="eg. Bachelor of Engineering, Computer Engineering"
+                  id="title"
+                  type="text"
+                  v-model="edu.course.title"
+                  required
+                />
+              </div>
+              <div class="profile-input">
+                <label for="location">Location</label>
+                <input
+                  placeholder="eg. London, United Kingdom"
+                  id="location"
+                  type="text"
+                  v-model="edu.course.location"
+                  required
+                />
+              </div>
+            </div>
+            <div class="d-flex profile-input-row">
+              <div class="profile-input">
+                <label for="phone">Start Date</label>
+                <div class="d-flex justify-content-between">
+                  <select required class="site-select" v-model="edu.course.startMonth">
+                    <option disabled value>Month</option>
+                    <option v-for="month in months" :key="month" :value="month">{{ month }}</option>
+                  </select>
+                  <select required class="site-select" v-model="edu.course.startYear">
+                    <option disabled value>Year</option>
+                    <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="profile-input">
+                <label for="phone">End Date</label>
+                <div v-if="!edu.course.currentlySchoolHere" class="d-flex justify-content-between">
+                  <select class="site-select" v-model="edu.course.endMonth">
+                    <option disabled value>Month</option>
+                    <option v-for="month in months" :key="month" :value="month">{{ month }}</option>
+                  </select>
+                  <select class="site-select" v-model="edu.course.endYear">
+                    <option disabled value>Year</option>
+                    <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+                  </select>
+                </div>
+                <label class="profile-edit-checkbox d-flex align-items-center">
+                  <input
+                    class="site-checkbox"
+                    type="checkbox"
+                    v-model="edu.course.currentlySchoolHere"
+                  />
+                  I currently attend here
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="profile-edit-submit d-flex justify-content-end">
+            <button class="site-btn green-btn" type="submit">Save</button>
+          </div>
+        </form>
+      </div>
+      <div v-if="!editingEducation" class="profile-section-exp bordered white-bg">
         <h3 class="profile-section-data-header">Education</h3>
         <div class="profile-section-btns">
-          <button class="br-50 green-circle">
+          <button class="br-50 green-circle" @click="() => editSection('editingEducation')">
             <svg viewBox="0 0 492.49284 492" xmlns="http://www.w3.org/2000/svg">
               <path
                 d="m304.140625 82.472656-270.976563 270.996094c-1.363281 1.367188-2.347656 3.09375-2.816406 4.949219l-30.035156 120.554687c-.898438 3.628906.167969 7.488282 2.816406 10.136719 2.003906 2.003906 4.734375 3.113281 7.527344 3.113281.855469 0 1.730469-.105468 2.582031-.320312l120.554688-30.039063c1.878906-.46875 3.585937-1.449219 4.949219-2.8125l271-270.976562zm0 0"
@@ -308,7 +501,7 @@
               />
             </svg>
           </button>
-          <button class="br-50 green-circle">
+          <button class="br-50 green-circle" @click="() => editSection('addEducation')">
             <svg
               version="1.1"
               id="Capa_1"
@@ -330,13 +523,17 @@
             </svg>
           </button>
         </div>
-        <div class="profile-info-block-item d-flex" v-for="item in education" :key="item.school">
+        <div
+          class="profile-info-block-item d-flex"
+          v-for="item in groupEducation"
+          :key="item.school"
+        >
           <img :src="item.schoolUrl" :alt="item.school" />
           <div class="profile-info-block-info">
             <h4>{{ item.school }}</h4>
             <div v-for="course in item.courses" :key="course.title" class="profile-info-block-data">
               <p>{{ course.title }}</p>
-              <p>{{ course.duration }}</p>
+              <p>{{ course.startMonth }} {{ course.startYear }} - {{ course.currentlySchoolHere ? 'present' : `${course.endMonth} ${course.endYear}`}}</p>
               <p>{{ course.location }}</p>
             </div>
           </div>
@@ -399,15 +596,30 @@ export default {
       images: {
         beginner: beginnerImg
       },
+      shortenedAbout: true,
       newExperience: {
         company: "",
-        title: "",
-        location: "",
-        startMonth: "",
-        startYear: "",
-        endMonth: "",
-        endYear: "",
-        currentlyWorkHere: false
+        job: {
+          title: "",
+          location: "",
+          startMonth: "",
+          startYear: "",
+          endMonth: "",
+          endYear: "",
+          currentlySchoolHere: false
+        }
+      },
+      newEducation: {
+        school: "",
+        course: {
+          title: "",
+          location: "",
+          startMonth: "",
+          startYear: "",
+          endMonth: "",
+          endYear: "",
+          currentlyWorkHere: false
+        }
       }
     };
   },
@@ -417,27 +629,76 @@ export default {
   },
   computed: {
     ...mapState("profile", [
-      "firstName",
-      "lastName",
-      "job",
-      "country",
-      "state",
-      "city",
-      "number",
-      "email",
-      "image",
-      "about",
+      "userDetails",
       "experience",
       "education",
       "skills",
       "level",
       "editingOverview",
       "editingExperience",
-      "addExperience"
-    ])
+      "addExperience",
+      "editingEducation",
+      "addEducation"
+    ]),
+    shouldShortenAbout() {
+      const { shortenedAbout, userDetails } = this;
+      return shortenedAbout && userDetails.about.length > 250;
+    },
+    formatAbout() {
+      const { userDetails } = this;
+      return this.shouldShortenAbout
+        ? `${userDetails.about.substring(0, 250)}...`
+        : userDetails.about;
+    },
+    groupExperience() {
+      const companies = Array.from(
+        new Set(this.experience.map(c => c.company))
+      );
+      return companies.map(c => {
+        const companyData = this.experience.filter(e => e.company === c);
+        const companyJobs = companyData.reduce(
+          (acc, curr) => acc.concat(curr.job),
+          []
+        );
+        return { ...companyData[0], jobs: companyJobs };
+      });
+    },
+    groupEducation() {
+      const schools = Array.from(new Set(this.education.map(c => c.school)));
+      return schools.map(s => {
+        const schoolData = this.education.filter(e => e.school === s);
+        const schoolCourses = schoolData.reduce(
+          (acc, curr) => acc.concat(curr.course),
+          []
+        );
+        return { ...schoolData[0], courses: schoolCourses };
+      });
+    }
   },
   methods: {
-    ...mapActions("profile", ["editSection", "closeEditSection"])
+    ...mapActions({
+      editSection: "profile/editSection",
+      closeEditSection: "profile/closeEditSection",
+      addEducationAction: "profile/addEducationAction",
+      addExperienceAction: "profile/addExperienceAction"
+    }),
+    toggleShortenedAbout(val) {
+      this.shortenedAbout = val;
+    },
+    saveExperience() {
+      this.addExperienceAction(this.newExperience);
+      this.closeEditSection("addExperience");
+    },
+    saveEducation() {
+      this.addEducationAction(this.newEducation);
+      this.closeEditSection("addEducation");
+    },
+    updateExperience() {
+      this.closeEditSection("editingExperience");
+    },
+    updateEducation() {
+      this.closeEditSection("editingEducation");
+    }
   },
   created() {
     this.years = Array(100)
@@ -693,6 +954,18 @@ export default {
 .profile-input input,
 .profile-input textarea {
   font-size: 14px;
+}
+
+.profile-form-input-wrapper {
+  padding-top: 15px;
+  margin-top: 15px;
+  border-top: 1px solid #72dfd4;
+}
+
+.profile-form-input-wrapper:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
 }
 
 @media screen and (max-width: 1000px) {
