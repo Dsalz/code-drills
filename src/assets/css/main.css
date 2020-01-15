@@ -225,6 +225,42 @@ input:checked + .slider:before {
   margin: 0 0 18px;
 }
 
+.site-rating-wrapper {
+  position: relative;
+  vertical-align: middle;
+  display: inline-block;
+  color: transparent;
+  overflow: hidden;
+  letter-spacing: 2px;
+}
+
+.site-rating-full {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #72dfd4;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.site-rating-empty:before,
+.site-rating-full:before {
+  content: "\2605 \2605 \2605 \2605 \2605";
+  font-size: 20px;
+  -webkit-text-stroke: 0.5px #cccccc;
+  -moz-text-stroke: 0.5px #cccccc;
+}
+
+.site-rating-full:before {
+  -webkit-text-stroke: 0.5px #72dfd4;
+  -moz-text-stroke: 0.5px #72dfd4;
+}
+
+.site-rating-empty:before {
+  -webkit-text-stroke: 0.5px #cccccc;
+  -moz-text-stroke: 0.5px #cccccc;
+}
+
 @media screen and (max-width: 800px) {
   .show-s,
   .nav-resp-menu a.show-s {

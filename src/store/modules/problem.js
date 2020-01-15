@@ -20,7 +20,7 @@ const state = {
   difficulty: "Easy",
   accuracy: "87%",
   frequency: "Often",
-  rating: 3,
+  rating: 1.7,
   code: "const a = 10",
   customInputs: [
     {
@@ -148,6 +148,23 @@ const actions = {
     // }
     // return tokenPromise;
   },
+  async fetchProblems({ commit, state, getters, dispatch }) {
+    console.log("TRYING TO FETCH");
+    return dispatch("ensureToken").then(__ => {
+      var listContentRequest = new proto.io.codedrills.proto.site.ListContentRequest();
+      listContentRequest.setContentType(
+        proto.io.codedrills.proto.content.ContentType.PROBLEM
+      );
+      return siteService
+        .listContent(listContentRequest, { "auth-token": getters.userToken })
+        .then(res => {
+          console.log("SUCCESS", res);
+        })
+        .catch(err => {
+          console.log("ERROR", err);
+        });
+    });
+  },
   async fetchProblem({ commit, state, getters, dispatch }, { url }) {
     console.log("TRYING TO FETCH");
     commit("toggleLoading", true);
@@ -197,18 +214,21 @@ const mutations = {
   setProblem(state, content) {
     state.title = content.title;
     var problemView = content.dataView.problemView;
+    console.log(statement);
     var statement = problemView.statementView; // TODO: set this as the statement
     var problemMeta = problemView.problemMeta;
     var problemStats = problemMeta.problemStats;
-    //state.rating = content.metaData.rating; //TODO: This is causing an error
+    state.rating = content.metaData.rating;
     var tags = [];
     var companies = [];
     for (var i = 0; i < content.metaData.tagsList.length; ++i) {
       var t = content.metaData.tagsList[i];
       var parts = t.split("/");
-      // TODO: titlecase parts[1]
-      if (parts[0] === "topic") tags.push(parts[1]);
-      else companies.push(parts[1]);
+      const titleCasedParts = `${parts[1][0].toUpperCase()}${parts[1]
+        .slice(1)
+        .toLowerCase()}`;
+      if (parts[0] === "topic") tags.push(titleCasedParts);
+      else companies.push(titleCasedParts);
     }
     state.tags = tags;
     state.companies = companies.filter(Boolean);
@@ -217,7 +237,12 @@ const mutations = {
       type: "int[]",
       inputType: "text"
     }));
-    state.accuracy = problemStats.accuracy; // TODO: Format as xx.yy%
+    const splitAccuracy = String(problemStats.accuracy).split(".");
+    const accuracy = `${splitAccuracy[0]}.${(splitAccuracy[1] || "").padEnd(
+      2,
+      "0"
+    )}%`;
+    state.accuracy = accuracy;
     state.difficulty = ["Easy", "Medium", "Hard"][problemStats.difficulty];
     state.frequency = "Often";
   }
