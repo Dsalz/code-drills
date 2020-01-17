@@ -109,29 +109,14 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>4 months ago</td>
-                <td>Accepted</td>
-                <td>3 MS</td>
-                <td>37MB</td>
-                <td>
-                  <a class="green-link" href="#">View Details</a>
-                </td>
-              </tr>
-              <tr>
-                <td>4 months ago</td>
-                <td>Accepted</td>
-                <td>3 MS</td>
-                <td>38MB</td>
-                <td>
-                  <a class="green-link" href="#">View Details</a>
-                </td>
-              </tr>
-              <tr>
-                <td>4 months ago</td>
-                <td>Accepted</td>
-                <td>3 MS</td>
-                <td>36MB</td>
+              <tr
+                v-for="data in submissionData.history"
+                :key="data.memoryLimit"
+              >
+                <td>{{ data.when }}</td>
+                <td>{{ data.status }}</td>
+                <td>{{ data.timeLimit }}</td>
+                <td>{{ data.memoryLimit }}</td>
                 <td>
                   <a class="green-link" href="#">View Details</a>
                 </td>
@@ -140,6 +125,11 @@
           </table>
         </div>
         <div
+          class="problem-section-description-info"
+          v-if="activeTab === 'description' || activeTab === 'editorial'"
+          v-html="problemDescription"
+        ></div>
+        <!-- <div
           class="problem-section-description-info"
           v-if="activeTab === 'description' || activeTab === 'editorial'"
         >
@@ -221,7 +211,7 @@
             \, Gary's hike can be drawn as:
           </p>
           <p>He enters and leaves one valley.</p>
-        </div>
+        </div> -->
         <Editor
           :editorialMode="activeTab === 'editorial'"
           :submissionMode="activeTab === 'submission'"
@@ -645,7 +635,8 @@ export default {
       "runtimeError",
       "timeTaken",
       "memoryConsumed",
-      "submissionData"
+      "submissionData",
+      "problemDescription"
     ]),
     ...mapState("user", ["hasPremiumAccess"]),
     premiumBlock() {
@@ -657,8 +648,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      getProblem: "problem/fetchProblem",
-      getProblems: "problem/fetchProblems"
+      getProblem: "problem/fetchProblem"
     }),
     onCmCodeChange(newCode) {
       this.code = newCode;
@@ -668,7 +658,6 @@ export default {
     }
   },
   created() {
-    this.getProblems();
     this.getProblem({ url: this.$route.params.name });
   }
 };
@@ -735,7 +724,9 @@ export default {
 }
 
 .problem-section-title-info div p,
-.problem-section-description p {
+.problem-section-description p,
+.problem-section-description-info p,
+.problem-section-description-info {
   font-weight: 300;
 }
 
