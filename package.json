@@ -10,7 +10,7 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "codemirror": "^5.50.0",
+    "codemirror": "^5.58.2",
     "core-js": "^3.4.3",
     "express": "^4.17.1",
     "firebase": "^7.6.1",
